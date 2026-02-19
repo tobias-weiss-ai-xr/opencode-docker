@@ -1,0 +1,21 @@
+FROM ubuntu:24.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates git openssh-client sudo bash jq iputils-ping \
+    && rm -rf /var/lib/apt/lists/*
+
+# Nicht-root-Benutzer erstellen
+ARG USER_ID=1000
+RUN useradd -u $USER_ID -m -s /bin/bash op \
+    && echo "op ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/op \
+    && chmod 0440 /etc/sudoers.d/op
+
+USER op
+WORKDIR /home/op
+ENV HOME=/home/op
+
+# OpenCode installieren
+RUN curl -fsSL https://opencode.ai/install | bash
+
+# OpenCode-Binärdatei in PATH setzen
+ENV PATH=/home/op/.opencode/bin:$PATH
