@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ARG USER_ID=1001
 RUN useradd -u $USER_ID -m -s /bin/bash op \
     && echo "op ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/op \
-    && chmod 0440 /etc/sudoers.d/op
+    && chmod 0440 /etc/sudoers.d/op \
+    && chown -R op:op /home/op
 
 USER op
 WORKDIR /home/op

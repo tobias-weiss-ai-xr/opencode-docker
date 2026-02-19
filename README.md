@@ -14,16 +14,58 @@ This repository provides a **Dockerized environment** for [OpenCode](https://ope
 
 ## Usage
 
-### 1. Build the Docker Image
-Run the `build.sh` script to build the Docker image:
+### Option A: Using Docker Compose (Recommended for PowerShell/Windows)
+
+#### 1. Build the Docker Image
+```powershell
+.\build-compose.ps1
+```
+This creates an image tagged as `opencode-ai:latest`.
+
+#### 2. Start OpenCode
+
+**Run OpenCode TUI:**
+```powershell
+.\start-compose.ps1
+```
+
+**Run with a specific message (one-shot):**
+```powershell
+.\run.ps1 "Fix the bug in auth.ts"
+```
+
+**Start web interface:**
+```powershell
+.\start-web.ps1
+```
+Opens at http://localhost:3000
+
+**Start headless server:**
+```powershell
+.\start-serve.ps1
+```
+Runs server at http://localhost:3000
+
+#### 3. Test Your Setup
+```powershell
+.\test.ps1
+```
+
+#### 4. Cleanup
+```powershell
+.\cleanup.ps1
+```
+
+### Option B: Using Traditional Scripts (Linux/macOS)
+
+#### 1. Build the Docker Image
 ```bash
 chmod +x build.sh
 ./build.sh
 ```
 This creates an image tagged as `opencode-ai:latest`.
 
-### 2. Start OpenCode
-Run the `start.sh` script to start the OpenCode CLI inside the container:
+#### 2. Start OpenCode
 ```bash
 chmod +x start.sh
 ./start.sh
@@ -38,8 +80,15 @@ chmod +x start.sh
 ### Change the Base Image
 Edit the `Dockerfile` to use a different base image (e.g., `debian` or `alpine`).
 
+### Docker Compose Modes
+The project includes multiple compose files for different use cases:
+
+- `docker-compose.yml` - Default TUI mode
+- `docker-compose.web.yml` - Web interface (port 3000)
+- `docker-compose.serve.yml` - Headless server (port 3000)
+
 ### Adjust Mounted Directories
-Modify the `start.sh` script to mount additional directories or environment variables.
+Edit `docker-compose.yml` or the `.ps1` scripts to add more volumes or environment variables.
 
 ## License
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.

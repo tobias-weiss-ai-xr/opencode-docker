@@ -1,0 +1,15 @@
+services:
+  opencode:
+    image: opencode-ai:latest
+    container_name: opencode-dev
+    working_dir: /workspace
+    environment:
+      PATH: "/home/op/.opencode/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    volumes:
+      - ${HOME}/.config/opencode:/home/op/.config/opencode
+      - ${HOME}/.local/share/opencode:/home/op/.local/share/opencode
+      - ${HOME}/.local/state:/home/op/.local/state
+      - .:/workspace
+    stdin_open: true
+    tty: true
+    command: ["opencode"]
