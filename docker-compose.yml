@@ -9,7 +9,7 @@ x-opencode-common: &opencode-common
   volumes:
     - ${HOME}/.config/opencode:/home/op/.config/opencode
     - ${HOME}/.local/share/opencode:/home/op/.local/share/opencode
-    - ${HOME}/.local/state:/home/op/.local/state
+    - ${HOME}/.local/state/opencode:/home/op/.local/state/opencode
     - .:/workspace
 
 services:
