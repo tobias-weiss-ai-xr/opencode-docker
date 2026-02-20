@@ -1,12 +1,12 @@
 #!/bin/bash
-#!/bin/bash
+# Start OpenCode using official image
 
-docker run --rm \
+docker run --rm -ti \
   -v "$HOME/.config/opencode:/home/op/.config/opencode" \
   -v "$HOME/.local/share/opencode:/home/op/.local/share/opencode" \
   -v "$HOME/.local/state:/home/op/.local/state" \
-  -v "C:\\Users\\Tobias\\git\\opencode-docker:/workspace" \
+  -v "${PWD}:/workspace" \
   -w /workspace \
   -e PATH="/home/op/.opencode/bin:$PATH" \
-  opencode-ai:latest \
+  ghcr.io/anomalyco/opencode:latest \
   opencode

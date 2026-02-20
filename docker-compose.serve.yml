@@ -1,15 +1,9 @@
+# OpenCode Headless Server
+# Usage: docker compose -f docker-compose.yml -f docker-compose.serve.yml up
+
 services:
-  opencode-serve:
-    image: opencode-ai:latest
+  opencode:
     container_name: opencode-serve
-    working_dir: /workspace
-    environment:
-      PATH: "/home/op/.opencode/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    volumes:
-      - ${HOME}/.config/opencode:/home/op/.config/opencode
-      - ${HOME}/.local/share/opencode:/home/op/.local/state
-      - ${HOME}/.local/state:/home/op/.local/state
-      - .:/workspace
     ports:
       - "3000:3000"
     command: ["opencode", "serve", "--hostname", "0.0.0.0"]

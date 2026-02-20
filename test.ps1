@@ -40,15 +40,22 @@ try {
     exit 1
 }
 
-# Test 2: Check if opencode-ai image exists
+# Test 2: Check if official opencode image exists (or pull it)
 Write-Host "`n[Test 2/7] Docker image" -ForegroundColor Yellow
-$imageExists = docker images opencode-ai:latest --format "{{.Repository}}:{{.Tag}}" 2>&1
-Test-Result "opencode-ai:latest image exists" ($imageExists -eq "opencode-ai:latest") 
+$imageExists = docker images ghcr.io/anomalyco/opencode:latest --format "{{.Repository}}:{{.Tag}}" 2>&1
+if ($imageExists -eq "ghcr.io/anomalyco/opencode:latest") {
+    Test-Result "ghcr.io/anomalyco/opencode:latest image exists" $true
+} else {
+    Write-Host "  Pulling image..." -ForegroundColor Gray
+    docker pull ghcr.io/anomalyco/opencode:latest 2>&1 | Out-Null
+    $imageExists = docker images ghcr.io/anomalyco/opencode:latest --format "{{.Repository}}:{{.Tag}}" 2>&1
+    Test-Result "ghcr.io/anomalyco/opencode:latest image pulled" ($imageExists -eq "ghcr.io/anomalyco/opencode:latest")
+}
 
 # Test 3: Test basic container execution
 Write-Host "`n[Test 3/7] Basic container execution" -ForegroundColor Yellow
 try {
-    $output = docker run --rm opencode-ai:latest opencode --help 2>&1
+    $output = docker run --rm ghcr.io/anomalyco/opencode:latest opencode --help 2>&1
     $hasCommands = ($output -join "") -match "Commands:"
     Test-Result "Container can run opencode --help" $hasCommands
 } catch {
@@ -61,7 +68,7 @@ try {
     $testFile = "test-file-$(Get-Date -Format 'yyyyMMddHHmmss').txt"
     "test content" | Out-File -FilePath $testFile -Encoding utf8
     
-    $check = docker run --rm -v "${PWD}:/workspace" -w /workspace opencode-ai:latest cat /workspace/$testFile 2>&1
+    $check = docker run --rm -v "${PWD}:/workspace" -w /workspace ghcr.io/anomalyco/opencode:latest cat /workspace/$testFile 2>&1
     Test-Result "Container can read mounted file" ($check -eq "test content")
     
     Remove-Item $testFile -Force
@@ -98,7 +105,7 @@ if (Test-Path "docker-compose.yml") {
 # Test 7: Test PATH environment
 Write-Host "`n[Test 7/7] Environment configuration" -ForegroundColor Yellow
 try {
-    $pathCheck = docker run --rm opencode-ai:latest bash -c 'echo $PATH' 2>&1
+    $pathCheck = docker run --rm ghcr.io/anomalyco/opencode:latest sh -c 'echo $PATH' 2>&1
     $pathString = if ($pathCheck -is [array]) { $pathCheck -join "" } else { $pathCheck }
     Test-Result "OpenCode binary is in PATH" ($pathString.Contains("opencode"))
 } catch {

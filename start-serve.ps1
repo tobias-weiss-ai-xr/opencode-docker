@@ -1,10 +1,10 @@
 #!/usr/bin/env pwsh
 
-# Start OpenCode headless server using docker-compose
+# Start OpenCode headless server
 
 $ErrorActionPreference = "Stop"
 $env:HOME = "$env:USERPROFILE"
 
 Write-Host "Starting OpenCode headless server on http://localhost:3000..." -ForegroundColor Cyan
 
-& docker compose -f docker-compose.serve.yml up
+& docker compose -f docker-compose.yml -f docker-compose.serve.yml up

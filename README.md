@@ -1,100 +1,113 @@
 # OpenCode Dockerized
 
-This repository provides a **Dockerized environment** for [OpenCode](https://opencode.ai), an AI-powered coding assistant. Use this to run OpenCode in an isolated container with persistent configurations and easy access to your local workspace.
+A lightweight Docker environment for [OpenCode](https://opencode.ai) using the official Alpine-based image (~160MB).
 
 ## Features
-- **Isolated Environment**: Runs OpenCode in a Docker container with Ubuntu 24.04.
-- **Persistent Configurations**: Mounts host directories to retain OpenCode settings and data.
-- **Workspace Access**: Mounts the current directory to `/workspace` inside the container for seamless file access.
-- **Non-Root User**: Runs as a non-root user with UID matching the host for consistent file permissions.
+
+- **Official Image**: Uses `ghcr.io/anomalyco/opencode:latest` - no custom build required
+- **Isolated Environment**: Runs OpenCode in a container with Alpine Linux
+- **Persistent Configurations**: Mounts host directories to retain settings and data
+- **Workspace Access**: Mounts current directory to `/workspace` inside the container
+- **Multiple Modes**: TUI, web interface, and headless server
 
 ## Prerequisites
-- [Docker](https://www.docker.com/) installed on your system.
-- A working internet connection to download the OpenCode installer.
 
-## Usage
+- [Docker](https://www.docker.com/) installed on your system
 
-### Option A: Using Docker Compose (Recommended for PowerShell/Windows)
+## Quick Start
 
-#### 1. Build the Docker Image
+### Windows (PowerShell)
+
 ```powershell
+# Pull the official image
 .\build-compose.ps1
-```
-This creates an image tagged as `opencode-ai:latest`.
 
-#### 2. Start OpenCode
-
-**Run OpenCode TUI:**
-```powershell
+# Run OpenCode TUI
 .\start-compose.ps1
-```
 
-**Run with a specific message (one-shot):**
-```powershell
+# Or run with a one-shot message
 .\run.ps1 "Fix the bug in auth.ts"
-```
 
-**Start web interface:**
-```powershell
+# Start web interface (http://localhost:3000)
 .\start-web.ps1
-```
-Opens at http://localhost:3000
 
-**Start headless server:**
-```powershell
+# Start headless server
 .\start-serve.ps1
-```
-Runs server at http://localhost:3000
 
-#### 3. Test Your Setup
-```powershell
+# Run tests
 .\test.ps1
-```
 
-#### 4. Cleanup
-```powershell
+# Cleanup containers
 .\cleanup.ps1
 ```
 
-### Option B: Using Traditional Scripts (Linux/macOS)
+### Linux/macOS (Bash)
 
-#### 1. Build the Docker Image
 ```bash
-chmod +x build.sh
-./build.sh
-```
-This creates an image tagged as `opencode-ai:latest`.
+# Pull the official image
+chmod +x build.sh && ./build.sh
 
-#### 2. Start OpenCode
-```bash
-chmod +x start.sh
-./start.sh
+# Run OpenCode TUI
+chmod +x start.sh && ./start.sh
 ```
 
-### 3. Access Your Workspace
-- The current directory on your host is mounted to `/workspace` inside the container.
-- OpenCode will have access to all files in this directory.
-- Configurations and data are persisted in `~/.config/opencode` and `~/.local/share/opencode`.
+## Docker Compose Modes
+
+| Mode | Command | Description |
+|------|---------|-------------|
+| TUI | `docker compose run --rm opencode` | Interactive terminal |
+| Web | `docker compose -f docker-compose.yml -f docker-compose.web.yml up` | Web UI on port 3000 |
+| Serve | `docker compose -f docker-compose.yml -f docker-compose.serve.yml up` | Headless server on port 3000 |
+
+## Volume Mounts
+
+All configurations mount:
+
+| Host Path | Container Path | Purpose |
+|-----------|----------------|---------|
+| `$HOME/.config/opencode` | `/home/op/.config/opencode` | Configuration files |
+| `$HOME/.local/share/opencode` | `/home/op/.local/share/opencode` | Data storage |
+| `$HOME/.local/state` | `/home/op/.local/state` | State files |
+| `.` (current directory) | `/workspace` | Your project |
+
+## Files
+
+```
+opencode-docker/
+├── docker-compose.yml        # Base configuration (TUI mode)
+├── docker-compose.web.yml    # Web interface overlay
+├── docker-compose.serve.yml  # Headless server overlay
+├── build.sh / build-compose.ps1   # Pull official image
+├── start.sh / start-compose.ps1   # Start TUI
+├── start-web.ps1             # Start web interface
+├── start-serve.ps1           # Start headless server
+├── run.ps1                   # One-shot execution
+├── cleanup.ps1               # Stop and cleanup
+└── test.ps1                  # Test suite
+```
 
 ## Customization
-### Change the Base Image
-Edit the `Dockerfile` to use a different base image (e.g., `debian` or `alpine`).
 
-### Docker Compose Modes
-The project includes multiple compose files for different use cases:
+### Add Environment Variables
 
-- `docker-compose.yml` - Default TUI mode
-- `docker-compose.web.yml` - Web interface (port 3000)
-- `docker-compose.serve.yml` - Headless server (port 3000)
+Edit `docker-compose.yml` to add environment variables:
 
-### Adjust Mounted Directories
-Edit `docker-compose.yml` or the `.ps1` scripts to add more volumes or environment variables.
+```yaml
+services:
+  opencode:
+    environment:
+      - MY_VAR=value
+```
+
+### Add Additional Volumes
+
+```yaml
+services:
+  opencode:
+    volumes:
+      - /path/on/host:/path/in/container
+```
 
 ## License
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
-## Contributing
-Contributions are welcome! Open an issue or submit a pull request.
-
-## Support
-For issues or questions, visit the [OpenCode documentation](https://opencode.ai) or open an issue in this repository.
+MIT License - see [LICENSE](LICENSE) file.

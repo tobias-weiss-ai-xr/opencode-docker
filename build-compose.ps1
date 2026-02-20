@@ -1,17 +1,17 @@
 #!/usr/bin/env pwsh
 
-# Build Docker image using docker-compose
+# Pull official OpenCode image
 
 $ErrorActionPreference = "Stop"
 $env:HOME = "$env:USERPROFILE"
 
-Write-Host "Building opencode-ai:latest image..." -ForegroundColor Cyan
+Write-Host "Pulling official OpenCode image..." -ForegroundColor Cyan
 
-docker compose build --build-arg USER_ID=1000
+docker pull ghcr.io/anomalyco/opencode:latest
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "✓ Build successful!" -ForegroundColor Green
+    Write-Host "✓ Image ready!" -ForegroundColor Green
 } else {
-    Write-Host "✗ Build failed" -ForegroundColor Red
+    Write-Host "✗ Pull failed" -ForegroundColor Red
     exit 1
 }
