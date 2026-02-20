@@ -9,4 +9,4 @@ docker run --rm -ti \
   -w /workspace \
   -e PATH="/home/op/.opencode/bin:$PATH" \
   ghcr.io/anomalyco/opencode:latest \
-  opencode
+  opencode /workspace
