@@ -1,8 +1,8 @@
 # OpenCode Docker Compose Configuration
-# Uses official image: ghcr.io/anomalyco/opencode:latest
+# Uses custom Alpine-based image: opencode-ai:latest
 
 x-opencode-common: &opencode-common
-  image: ghcr.io/anomalyco/opencode:latest
+  image: opencode-ai:latest
   working_dir: /workspace
   environment:
     PATH: "/home/op/.opencode/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

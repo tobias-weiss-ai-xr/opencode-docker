@@ -1,6 +1,6 @@
 #!/bin/bash
-# Pull the official OpenCode image
+# Build custom OpenCode image based on Alpine
 
-echo "Pulling official OpenCode image..."
-docker pull ghcr.io/anomalyco/opencode:latest
+echo "Building OpenCode Alpine image..."
+docker build --build-arg USER_ID=1001 -t opencode-ai:latest .
 echo "✓ Done!"
