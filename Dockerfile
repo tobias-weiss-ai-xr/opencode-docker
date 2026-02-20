@@ -1,6 +1,6 @@
 FROM alpine:3.19
 
-# Install dependencies
+# Install dependencies including terminal support
 RUN apk add --no-cache \
     curl \
     ca-certificates \
@@ -9,7 +9,14 @@ RUN apk add --no-cache \
     bash \
     jq \
     sudo \
-    shadow
+    shadow \
+    ncurses \
+    ncurses-terminfo \
+    locales
+
+# Set up locale
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
 
 # Create non-root user with configurable UID
 ARG USER_ID=1001
