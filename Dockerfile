@@ -1,6 +1,7 @@
 FROM alpine:3.19
 
-# Install dependencies including terminal support
+# Install dependencies including terminal and timezone support
+# tzdata is CRITICAL for bubbletea-based TUI apps (opencode) to work
 RUN apk add --no-cache \
     curl \
     ca-certificates \
@@ -12,11 +13,13 @@ RUN apk add --no-cache \
     shadow \
     ncurses \
     ncurses-terminfo \
+    tzdata \
     locales
 
-# Set up locale
+# Set up locale and timezone (critical for TUI apps)
 ENV LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8
+    LC_ALL=C.UTF-8 \
+    TZ=UTC
 
 # Create non-root user with configurable UID
 ARG USER_ID=1001
